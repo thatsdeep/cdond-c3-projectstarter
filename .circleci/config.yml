@@ -208,7 +208,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["d8:a7:f5:7a:83:08:a2:e9:9a:62:8d:f3:8e:fb:f9:dc"]
+          fingerprints: ["a9:cd:75:51:9b:19:ac:47:22:f2:2e:93:0a:da:91:22"]
       - attach_workspace:
           at: ~/
       - restore_cache:
@@ -326,7 +326,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - add_ssh_keys:
-          fingerprints: ["d8:a7:f5:7a:83:08:a2:e9:9a:62:8d:f3:8e:fb:f9:dc"]
+          fingerprints: ["a9:cd:75:51:9b:19:ac:47:22:f2:2e:93:0a:da:91:22"]
       - attach_workspace:
           at: ~/
       - run: 
@@ -460,19 +460,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
       - deploy-infrastructure:
-          requires: [build-frontend,build-backend,test-frontend,test-backend,scan-frontend,scan-backend]
           filters:
             branches:
               only: [master]
