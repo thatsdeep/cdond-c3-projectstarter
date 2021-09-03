@@ -376,7 +376,7 @@ jobs:
       - run:
           name: Frontend smoke test
           command: |
-            if curl -s http://udapeople-udap-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.ap-south-1.amazonaws.com/employees | grep "Welcome"
+            if curl -s http://udapeople-udap-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.ap-south-1.amazonaws.com | grep "Welcome"
             then
               return 0
             else
@@ -460,17 +460,34 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-
-      - build-backend
+      - build-frontend:
+          filters:
+            branches:
+              only: [test]
+      - build-backend:
+          filters:
+            branches:
+              only: [test]
       - test-frontend:
           requires: [build-frontend]
+          filters:
+            branches:
+              only: [test]
       - test-backend:
-          requires: [build-backend]
+          requires: [build-backend]          
+          filters:
+            branches:
+              only: [test]
       - scan-backend:
-          requires: [build-backend]
+          requires: [build-backend]          
+          filters:
+            branches:
+              only: [test]
       - scan-frontend:
-          requires: [build-frontend]
+          requires: [build-frontend]          
+          filters:
+            branches:
+              only: [test]
       - deploy-infrastructure:
           requires: [build-frontend,build-backend,test-frontend,test-backend,scan-frontend,scan-backend]
           filters:
@@ -488,6 +505,5 @@ workflows:
            requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
            requires: [smoke-test]
-      # - cleanup:
-      #    requires: [cloudfront-update]
-      
+      - cleanup:
+           requires: [cloudfront-update]    
